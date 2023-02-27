@@ -16,9 +16,9 @@ public class BasicUserJourneyTest extends Simulation {
                 .contentTypeHeader("application/json")
                 .acceptEncodingHeader("gzip, deflate");
 
-    private ScenarioBuilder scn = scenario("BasicUserJourneyTest")
+    private ScenarioBuilder scn = scenario("Get all projects test")
             .exec(
-                    http("GET " +  "/rest/api/2/status")
+                    http("GET " +  "/rest/api/2/project")
                             .get("/rest/api/2/status")
                             .asJson()
             );
