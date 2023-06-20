@@ -1,10 +1,13 @@
+import io.gatling.javaapi.core.ChainBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Session;
 import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
+import io.gatling.javaapi.http.HttpRequestActionBuilder;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.Proxy;
@@ -23,52 +26,79 @@ public class EditSprintsTest extends Simulation {
             .acceptHeader("*/*")
             .contentTypeHeader("application/json")
             .acceptEncodingHeader("gzip, deflate");
-
     String totalNoBoards = "totalNoBoards";
     ScenarioBuilder scn = scenario("Get boards and edit Sprints")
             .exec(
-                    http("GET " + "/rest/agile/1.0/board")
-                            .get("/rest/agile/1.0/board")
-                            .check(jsonPath("$.total").find().saveAs(totalNoBoards))
-            )
+                    getTotalBoards())
             .exec(
-                    session -> session.set("startAt", ThreadLocalRandom.current().nextInt(session.getInt(totalNoBoards)))
-            )
+                    setBoardsStartAtInSession(totalNoBoards))
             .exec(
-                    http("GET " + "/rest/agile/1.0/board")
-                            .get("/rest/agile/1.0/board")
-                            .queryParam("startAt", session -> session.getInt("startAt"))
-                            .check(jsonPath("$.values[*].id").findAll().saveAs("BoardIds"))
-            )
+                    getRandomBoards())
             .exec(
-                    session -> {
-                        List<String> ids = session.getList("BoardIds");
-                        String randomId = ids.get(ThreadLocalRandom.current().nextInt(ids.size()));
-                        Session newSession = session.set("BoardId", randomId);
-                        return newSession;
-                    }
-            )
+                    getRandomBoardId())
             .exec(
-                    http("GET " + "rest/agile/1.0/board/{id}/sprint")
-                            .get("/rest/agile/1.0/board/" + "#{BoardId}" + "/sprint")
-                            .check(jsonPath("$.values[*].id").findAll().saveAs("SprintIds"))
-            )
+                    getSprintIds())
             .exec(
-                    session -> {
-                        List<String> ids = session.getList("SprintIds");
-                        String randomId = ids.get(ThreadLocalRandom.current().nextInt(ids.size()));
-                        return session.set("SprintId", randomId);
-                    })
+                    setRandomSprintIdInSession())
             .exec(
-                    http("GET " + "/rest/agile/1.0/sprint/{id}")
-                            .get("/rest/agile/1.0/sprint/" + "#{sprintId}")
-            )
+                    getRandomSprint())
             .exec(
-                    http("POST " + "/rest/agile/1.0/sprint/{id}")
-                            .post("/rest/agile/1.0/sprint/" + "#{SprintId}")
-                            .body(StringBody(session -> "{ \"goal\": \"New goal for Sprint " +
-                                    session.getString("SprintId") + " changed at " + System.currentTimeMillis() + "\" }"))
-            );
+                    updateSprintGoal());
+
+    private ChainBuilder getTotalBoards() {
+        return exec(
+                http("GET " + "/rest/agile/1.0/board")
+                        .get("/rest/agile/1.0/board")
+                        .check(jsonPath("$.total").find().saveAs(totalNoBoards))
+        );
+    }
+
+    private static Function<Session, Session> setBoardsStartAtInSession(String totalNoBoards) {
+        return session -> session.set("startAt", ThreadLocalRandom.current().nextInt(session.getInt(totalNoBoards)));
+    }
+
+    private ChainBuilder getRandomBoards() {
+        return exec(http("GET " + "/rest/agile/1.0/board")
+                .get("/rest/agile/1.0/board")
+                .queryParam("startAt", session -> session.getInt("startAt"))
+                .check(jsonPath("$.values[*].id").findAll().saveAs("boardIds")));
+    }
+
+    private Function<Session, Session> getRandomBoardId() {
+        return session -> {
+            List<String> ids = session.getList("boardIds");
+            String randomId = ids.get(ThreadLocalRandom.current().nextInt(ids.size()));
+            Session newSession = session.set("BoardId", randomId);
+            return newSession;
+        };
+    }
+
+    private HttpRequestActionBuilder getSprintIds() {
+        return http("GET " + "rest/agile/1.0/board/{id}/sprint")
+                .get("/rest/agile/1.0" +
+                        "/board/" + "#{BoardId}" + "/sprint")
+                .check(jsonPath("$.values[*].id").findAll().saveAs("sprintIds"));
+    }
+
+    private Function<Session, Session> setRandomSprintIdInSession() {
+        return session -> {
+            List<String> ids = session.getList("sprintIds");
+            String randomId = ids.get(ThreadLocalRandom.current().nextInt(ids.size()));
+            return session.set("sprintId", randomId);
+        };
+    }
+
+    private HttpRequestActionBuilder getRandomSprint() {
+        return http("GET " + "/rest/agile/1.0/sprint/{id}")
+                .get("/rest/agile/1.0/sprint/" + "#{sprintId}");
+    }
+
+    private HttpRequestActionBuilder updateSprintGoal() {
+        return http("POST " + "/rest/agile/1.0/sprint/{id}")
+                .post("/rest/agile/1.0/sprint/" + "#{sprintId}")
+                .body(StringBody(session -> "{ \"goal\": \"New goal for Sprint " +
+                        session.getString("sprintId") + " changed at " + System.currentTimeMillis() + "\" }"));
+    }
 
     {
         setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
