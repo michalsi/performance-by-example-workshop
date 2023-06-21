@@ -21,7 +21,7 @@ public class EditSprintsTest extends Simulation {
 
     HttpProtocolBuilder httpProtocol = http
             .baseUrl(BASE_URL)
-            .proxy(Proxy("localhost", 8000))
+//            .proxy(Proxy("localhost", 8000))
             .authorizationHeader("Bearer " + TOKEN)
             .acceptHeader("*/*")
             .contentTypeHeader("application/json")
@@ -30,20 +30,22 @@ public class EditSprintsTest extends Simulation {
     ScenarioBuilder scn = scenario("Get boards and edit Sprints")
             .exec(
                     getTotalBoards())
-            .exec(
-                    setBoardsStartAtInSession(totalNoBoards))
-            .exec(
-                    getRandomBoards())
-            .exec(
-                    getRandomBoardId())
-            .exec(
-                    getSprintIds())
-            .exec(
-                    setRandomSprintIdInSession())
-            .exec(
-                    getRandomSprint())
-            .exec(
-                    updateSprintGoal());
+            .doIf(session -> session.getInt("totalNoBoards") > 0).then(
+                    exec(
+                            setBoardsStartAtInSession(totalNoBoards))
+                            .exec(
+                                    getRandomBoards())
+                            .exec(
+                                    getRandomBoardId())
+                            .exec(
+                                    getSprintIds())
+                            .exec(
+                                    setRandomSprintIdInSession())
+                            .exec(
+                                    getRandomSprint())
+                            .exec(
+                                    updateSprintGoal())
+            );
 
     private ChainBuilder getTotalBoards() {
         return exec(
@@ -101,7 +103,12 @@ public class EditSprintsTest extends Simulation {
     }
 
     {
-        setUp(scn.injectOpen(atOnceUsers(1))).protocols(httpProtocol);
-
+        setUp(scn.injectOpen(
+                incrementUsersPerSec(5.0)
+                        .times(5)
+                        .eachLevelLasting(10)
+                        .separatedByRampsLasting(10)
+                        .startingFrom(10) // Double
+        )).protocols(httpProtocol);
     }
 }
