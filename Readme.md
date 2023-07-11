@@ -22,9 +22,9 @@ This script serves as a user-friendly interface for managing the Docker image an
 ```./testManager.sh```
 When you run this script, you'll be given three options:
 
-- `🏗️ Rebuild Docker image`: This option will build the Docker image, pulling in all necessary dependencies.
-- `🚀 Run Gatling tests`: This option will run your Gatling tests inside the Docker container.
-- `🏗️ + 🚀 Rebuild Docker image and run Gatling tests` : This option will rebuild the Docker image and then run the Gatling tests.
+- `🏗️ Rebuild Docker image`: Build the Docker image, pulling in all necessary dependencies.
+- `🚀 Run Gatling tests`: Run your Gatling tests inside the Docker container.
+- `🏗️ + 🚀 Rebuild Docker image and run Gatling tests` : Rebuild the Docker image and then run the Gatling tests.
 
 ### Environment Variables ###
 
