@@ -30,13 +30,16 @@ When you run this script, you'll be given three options:
 
 The script uses two environment variables, **JIRA_BASE_URL** and **PERSONAL_ACCESS_TOKEN**.
 
-- **JIRA_BASE_URL**: This should be set to the base URL of your Jira instance.
-- **PERSONAL_ACCESS_TOKEN**: This should be set to your personal access token.
-  If these environment variables are set when the script is run, it will use their values as parameters for the Gatling tests. If they're not set, the script will prompt you to enter these values. To avoid entering these values every time, you can set these environment variables in your shell's profile file.
+- **JIRA_BASE_URL**: Base URL of your Jira instance.
+- **PERSONAL_ACCESS_TOKEN**: Your personal access token.
+- **TEST_SCENARIO**: Name of the Gatling test scenario you wish to run.
+
+If these environment variables are set when the script is run, it will use their values as parameters for the Gatling tests. If they're not set, the script will prompt you to enter these values. To avoid entering these values every time, you can set these environment variables in your shell's profile file.
 
 ```
-export JIRA_BASE_URL=<your_value>
-export PERSONAL_ACCESS_TOKEN=<your_value>
+export JIRA_BASE_URL=<your_jira_base_url>
+export PERSONAL_ACCESS_TOKEN=<your_personal_access_token>
+export TEST_SCENARIO=<your_test_scenario>
 ```
 Replace <your_value> with your actual values.
 
