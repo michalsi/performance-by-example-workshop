@@ -1,3 +1,5 @@
+#!/bin/bash
+
 TOKEN=
 BASE_URL=
 TEST_SCENARIO=EditSprintsTest
