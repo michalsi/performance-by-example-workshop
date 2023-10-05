@@ -9,7 +9,6 @@ COPY pom.xml .
 
 # Download dependencies
 RUN ./mvnw dependency:go-offline
-RUN ./mvnw gatling:test || true # download gatling dependencies and allow to fail
 
 # Copy source code
 COPY src src
@@ -35,6 +34,6 @@ COPY runTest.sh .
 RUN chmod +x runTest.sh
 
 # Copy the built application from the builder stage
-COPY --from=builder /app/target /app/target
+RUN echo "Copying target directory from builder stage..."
 
-CMD ["./runTest.sh"]
+COPY --from=builder /app/target /app/target

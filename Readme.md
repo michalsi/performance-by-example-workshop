@@ -28,23 +28,29 @@ When you run this script, you'll be given three options:
 
 ### Environment Variables ###
 
-The script uses two environment variables, **JIRA_BASE_URL** and **PERSONAL_ACCESS_TOKEN**.
+The script uses environment variables, **JIRA_BASE_URL**, **PERSONAL_ACCESS_TOKEN**, and **TEST_SCENARIO**.
 
 - **JIRA_BASE_URL**: Base URL of your Jira instance.
 - **PERSONAL_ACCESS_TOKEN**: Your personal access token.
 - **TEST_SCENARIO**: Name of the Gatling test scenario you wish to run.
 
-If these environment variables are set when the script is run, it will use their values as parameters for the Gatling tests. If they're not set, the script will prompt you to enter these values. To avoid entering these values every time, you can set these environment variables in your shell's profile file.
+If these environment variables are set when the script is run, it will use their values as parameters for the Gatling tests. If they're not set, the script will prompt you to enter these values.
 
-```
+To assist with this, we provide a script named `setupEnv.sh`. This script will display the current values of the environment variables and prompt you to enter new values. At the end, it will provide `export` commands for the new values, which you can copy and paste into your terminal to set the variables.
+
+To avoid entering these values every time, you can set these environment variables in your shell's profile file.
+
+```bash
 export JIRA_BASE_URL=<your_jira_base_url>
 export PERSONAL_ACCESS_TOKEN=<your_personal_access_token>
 export TEST_SCENARIO=<your_test_scenario>
 ```
-Replace <your_value> with your actual values.
+
+Replace `<your_value>` with your actual values.
 
 ### runTest.sh ###
-This script is used to execute the Gatling tests within the Docker container. It's called by testManager.sh and doesn't typically need to be run directly by users.
+This script is used to execute the Gatling tests within the Docker container.
+It's called by testManager.sh and doesn't typically need to be run directly by users.
 
 Please remember to replace all necessary parameters and values in the scripts and commands to match your particular testing and environment setup.
 
