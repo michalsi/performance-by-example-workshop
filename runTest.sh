@@ -40,5 +40,4 @@ fi
 
 echo "Running test scenario: ${PACKAGE_NAME}.${TEST_SCENARIO}"
 
-echo "Executing command: ./mvnw gatling:test -Dgatling.simulationClass=\"${PACKAGE_NAME}.${TEST_SCENARIO}\" -Durl=\"${BASE_URL}\" -Dtoken=\"${TOKEN}\""
 ./mvnw gatling:test -Dgatling.simulationClass="${PACKAGE_NAME}.${TEST_SCENARIO}" -Durl="${BASE_URL}" -Dtoken="${TOKEN}"
