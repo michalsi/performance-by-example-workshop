@@ -1,19 +1,21 @@
 global:
   scrape_interval: 15s
 scrape_configs:
-  -
-    job_name: Jira8.x
+  - job_name: Jira8.x
     metrics_path: '/plugins/servlet/prometheus/metrics'
     scheme: https
     static_configs:
-      -
-        targets:
+      - targets:
           - "<jira_instance1_hostname>"
-
   - job_name: Jira9.x
     metrics_path: '/plugins/servlet/prometheus/metrics'
     scheme: https
     static_configs:
-      -
-        targets:
+      - targets:
           - "<jira_instance2_hostname>"
+  - job_name: 'gatling'
+    scheme: http
+    metrics_path: '/metrics'
+    static_configs:
+      - targets:
+          - 'host.docker.internal:9011'

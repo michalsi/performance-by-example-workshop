@@ -40,8 +40,10 @@
                 <artifactId>gatling-maven-plugin</artifactId>
                 <version>${gatling-maven-plugin.version}</version>
                 <configuration>
-                    <!-- Enterprise Cloud (https://cloud.gatling.io/) configuration reference: https://gatling.io/docs/gatling/reference/current/extensions/maven_plugin/#working-with-gatling-enterprise-cloud -->
-                    <!-- Enterprise Self-Hosted configuration reference: https://gatling.io/docs/gatling/reference/current/extensions/maven_plugin/#working-with-gatling-enterprise-self-hosted -->
+                    <!-- Adding JMX properties and JMX Exporter as a Java agent -->
+                    <jvmArgs>
+                        <jvmArg>-javaagent:./monitoring/jmx_prometheus_javaagent-0.19.0.jar=9011:./monitoring/jmx_exporter_config.yaml</jvmArg>
+                    </jvmArgs>
                 </configuration>
             </plugin>
             <plugin>
