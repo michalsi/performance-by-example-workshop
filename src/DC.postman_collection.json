@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "40748bcc-4c40-470b-af6b-bbf8910663ee",
+		"name": "DC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9362000"
+	},
+	"item": [
+		{
+			"name": "GET Personal Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"authorisation_token\", jsonData.rawToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"tokenName\",\n    \"expirationDuration\": 90\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{JIRA_URL}}/rest/pat/latest/tokens",
+					"host": [
+						"{{JIRA_URL}}"
+					],
+					"path": [
+						"rest",
+						"pat",
+						"latest",
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Personal Access Token",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "MTQ3NDM2ODY4Njc5OjEppmcUrmLp5unRuVIydEsAY49I",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[32]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{JIRA_URL}}/rest/pat/latest/admin/tokens",
+					"host": [
+						"{{JIRA_URL}}"
+					],
+					"path": [
+						"rest",
+						"pat",
+						"latest",
+						"admin",
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get status",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "GET /rest/agile/1.0/board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();",
+							"// Get the length of the values array",
+							"var arrayLength = responseJson.values.length;",
+							"",
+							"// Generate a random index",
+							"var randomIndex = Math.floor(Math.random() * arrayLength);",
+							"",
+							"// Extract random board ID from response",
+							"const boardId = responseJson.values[randomIndex].id;",
+							"",
+							"// Save board ID to environment variable",
+							"pm.environment.set('boardId', boardId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JIRA_URL}}/rest/agile/1.0/board",
+					"host": [
+						"{{JIRA_URL}}"
+					],
+					"path": [
+						"rest",
+						"agile",
+						"1.0",
+						"board"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /rest/agile/1.0/board/{{boardId}}/sprint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJson = pm.response.json();",
+							"// Get the length of the values array",
+							"var arrayLength = responseJson.values.length;",
+							"",
+							"// Generate a random index",
+							"var randomIndex = Math.floor(Math.random() * arrayLength);",
+							"",
+							"// Extract random board ID from response",
+							"const sprintId = responseJson.values[randomIndex].id;",
+							"",
+							"// Save board ID to environment variable",
+							"pm.environment.set('sprintId', sprintId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JIRA_URL}}/rest/agile/1.0/board/{{boardId}}/sprint",
+					"host": [
+						"{{JIRA_URL}}"
+					],
+					"path": [
+						"rest",
+						"agile",
+						"1.0",
+						"board",
+						"{{boardId}}",
+						"sprint"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /rest/agile/1.0/sprint/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JIRA_URL}}/rest/agile/1.0/sprint/{{sprintId}}",
+					"host": [
+						"{{JIRA_URL}}"
+					],
+					"path": [
+						"rest",
+						"agile",
+						"1.0",
+						"sprint",
+						"{{sprintId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST rest/agile/1.0/sprint/{sprintId}",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"goal\": \"New Goal for a Sprint {{sprintId}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{JIRA_URL}}/rest/agile/1.0/sprint/{{sprintId}}",
+					"host": [
+						"{{JIRA_URL}}"
+					],
+					"path": [
+						"rest",
+						"agile",
+						"1.0",
+						"sprint",
+						"{{sprintId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET refresh-cache/reset",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
